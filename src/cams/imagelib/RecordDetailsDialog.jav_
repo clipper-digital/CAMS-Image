@@ -1,0 +1,631 @@
+package cams.imagelib;
+
+import java.awt.*;
+import javax.swing.*;
+import java.util.*;
+import java.sql.*;
+
+import cams.database.*;
+import com.borland.jbcl.layout.*;
+import javax.swing.border.*;
+import java.awt.event.*;
+import cams.console.*;
+
+/**
+ * <p>Title: Clipper Asset Management System</p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2004</p>
+ * <p>Company: </p>
+ * @author JJS Solutions
+ * @version 1.0
+ */
+
+public class RecordDetailsDialog extends JDialog {
+  private CamsDB mCamsDB = null;
+  private JFrame mParent = null;
+  private RecordDetailsDialog mTheFrame = this;
+  ArrayList mTheRecords = null;
+  TableSorter mTableSorter = null;
+  JTable mJTableDetails = null;
+  private boolean recordChanged = false;
+
+  ImageIcon imageSave;
+  ImageIcon imageCancel;
+  ImageIcon imageFirst;
+  ImageIcon imagePrev;
+  ImageIcon imageNext;
+  ImageIcon imageLast;
+
+  JPanel panel1 = new JPanel();
+  JMenuBar jMenuBar1 = new JMenuBar();
+  JMenu jMenuAsset = new JMenu();
+  JMenuItem jmnuSave = new JMenuItem();
+  JMenuItem jmnuCancel = new JMenuItem();
+  JMenuItem jmnuFirst = new JMenuItem();
+  JMenuItem jmnuPrevious = new JMenuItem();
+  JMenuItem jmnuNext = new JMenuItem();
+  JMenuItem jmnuLast = new JMenuItem();
+  JMenuItem jmnuClose = new JMenuItem();
+  JPanel jPanel1 = new JPanel();
+  JLabel jLabel1 = new JLabel();
+  XYLayout xYLayout2 = new XYLayout();
+  JLabel jLabel4 = new JLabel();
+  JLabel jLabel6 = new JLabel();
+  JLabel jLabel7 = new JLabel();
+  JTextField txtRecordName = new JTextField();
+  JTextField jTextField2 = new JTextField();
+  JTextField txtAdName = new JTextField();
+  TitledBorder titledBorder1;
+  JTextField txtAreaName = new JTextField();
+  JTextField txtRegion = new JTextField();
+  JComboBox cboAdSize = new JComboBox();
+  JLabel jLabel2 = new JLabel();
+  JComboBox cboAdQuality = new JComboBox();
+  JLabel jLabel3 = new JLabel();
+  JLabel jLabel5 = new JLabel();
+  JLabel jlblPreview = new JLabel();
+  JLabel jLabel8 = new JLabel();
+  JTextArea txtNotes = new JTextArea();
+  JScrollPane jScrollPane1 = new JScrollPane();
+  JToolBar jToolBar = new JToolBar();
+  JButton jbtnSave = new JButton();
+  JButton jbtnCancel = new JButton();
+  JButton jbtnFirst = new JButton();
+  JButton jbtnPrev = new JButton();
+  JButton jbtnNext = new JButton();
+  JButton jbtnLast = new JButton();
+  BorderLayout borderLayout1 = new BorderLayout();
+
+  public RecordDetailsDialog(Frame frame, CamsDB theDB) {
+    super(frame, "Record Details", true);
+    mParent = (JFrame) frame;
+    mCamsDB = theDB;
+    try {
+      jbInit();
+      pack();
+
+      loadAdSizes();
+      loadAdQualities();
+
+      ImageLibFrame theImgLibFrame = (ImageLibFrame) mParent;
+      mJTableDetails = theImgLibFrame.jtableDetails;
+      mTableSorter = (TableSorter) mJTableDetails.getModel();
+      ImageLibTableModel theModel = (ImageLibTableModel)mTableSorter.getTableModel();
+      mTheRecords = theModel.getData();
+
+      showDetails();
+    }
+    catch(Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  class dropdownItem {
+    private int id;
+    private String description;
+
+    public String toString() { return description; }
+    public String getDesc() { return description; }
+    public int getId() { return id; }
+
+    public dropdownItem(int id, String description) {
+      this.id = id;
+      this.description = description;
+    }
+  }
+
+  private void loadAdSizes() {
+    ResultSet rs = null;
+    ArrayList adSizes = new ArrayList();
+
+    DefaultComboBoxModel theModel = (DefaultComboBoxModel) cboAdSize.getModel();
+    theModel.removeAllElements();
+    theModel.addElement(new dropdownItem(-1, ""));
+    try {
+      rs = mCamsDB.query("SELECT * FROM AdSize ORDER BY SortOrder");
+      while (rs.next()) {
+        // adSizes.add(new dropdownItem(rs.getInt("AdvertSizeID"), rs.getString("AdvertDescription")));
+        theModel.addElement(new dropdownItem(rs.getInt("AdvertSizeID"), rs.getString("AdvertDescription")));
+      }
+      if (rs.getStatement() != null) rs.getStatement().close();
+      rs.close(); rs = null;
+
+      cboAdSize.setSelectedIndex(0);
+    }
+    catch (Exception ex) {
+      Console.println("RecordDetailsDialog:loadAdSizes: " + ex.getMessage());
+    }
+  }
+
+  private void loadAdQualities() {
+    ResultSet rs = null;
+    ArrayList adSizes = new ArrayList();
+
+    DefaultComboBoxModel theModel = (DefaultComboBoxModel) cboAdQuality.getModel();
+    theModel.removeAllElements();
+    theModel.addElement(new dropdownItem(-1, ""));
+    try {
+      rs = mCamsDB.query("SELECT * FROM AdQuality ORDER BY SortOrder");
+      while (rs.next()) {
+        theModel.addElement(new dropdownItem(rs.getInt("quality_id"), rs.getString("description")));
+      }
+      if (rs.getStatement() != null) rs.getStatement().close();
+      rs.close(); rs = null;
+
+      cboAdQuality.setSelectedIndex(0);
+    }
+    catch (Exception ex) {
+      Console.println("RecordDetailsDialog:loadAdQualities: " + ex.getMessage());
+    }
+  }
+
+  private void showDetails() {
+    int selectedRow = mJTableDetails.getSelectedRow();
+    ImageLibRecord theRecord = (ImageLibRecord) mTheRecords.get(mTableSorter.modelIndex(selectedRow));
+
+    txtRecordName.setText(theRecord.getRecordName());
+    txtAdName.setText(theRecord.getAdName());
+    txtAreaName.setText(theRecord.getAreaName());
+    txtRegion.setText(theRecord.getRegion());
+    txtNotes.setText(theRecord.getNotes());
+    txtNotes.setCaretPosition(0);
+
+    // Set Ad Size Combo
+    DefaultComboBoxModel theModel = (DefaultComboBoxModel) cboAdSize.getModel();
+    int adSizeId = theRecord.getAdSizeId();
+    for (int i=0; i < theModel.getSize(); i++) {
+      dropdownItem theItem = (dropdownItem) theModel.getElementAt(i);
+      if (theItem.getId() == adSizeId) {
+        cboAdSize.setSelectedIndex(i);
+        break;
+      }
+    }
+
+    // Set Ad Quality Combo
+    theModel = (DefaultComboBoxModel) cboAdQuality.getModel();
+    int adQualityId = theRecord.getAdQualityId();
+    for (int i=0; i < theModel.getSize(); i++) {
+      dropdownItem theItem = (dropdownItem) theModel.getElementAt(i);
+      if (theItem.getId() == adQualityId) {
+        cboAdQuality.setSelectedIndex(i);
+        break;
+      }
+    }
+
+    ImageIcon thePreviewIcon = (ImageIcon)jlblPreview.getIcon();
+    if (thePreviewIcon != null) {
+      thePreviewIcon.getImage().flush();
+      thePreviewIcon = null;
+    }
+    byte[] theThumbnail = theRecord.getThumbMedium(mCamsDB);
+    if (theThumbnail != null)
+      thePreviewIcon = new ImageIcon(theThumbnail);
+    else
+      thePreviewIcon = null;
+    jlblPreview.setIcon(thePreviewIcon);
+    jlblPreview.revalidate();
+  }
+
+  private boolean dataChanged() {
+    boolean changed = false;
+
+    int selectedRow = mJTableDetails.getSelectedRow();
+    ImageLibRecord theRecord = (ImageLibRecord) mTheRecords.get(mTableSorter.modelIndex(selectedRow));
+
+    if (!txtAdName.getText().equals(theRecord.getAdName())) return true;
+    if (!txtAreaName.getText().equals(theRecord.getAreaName())) return true;
+    if (!txtRegion.getText().equals(theRecord.getRegion())) return true;
+    if (!txtNotes.getText().equals(theRecord.getNotes())) return true;
+
+    // Check Ad Size Combo
+    dropdownItem theItem = (dropdownItem) cboAdSize.getSelectedItem();
+    if (theItem.getId() != theRecord.getAdSizeId()) return true;
+
+    // Check Ad Quality Combo
+    theItem = (dropdownItem) cboAdQuality.getSelectedItem();
+    if (theItem.getId() != theRecord.getAdQualityId()) return true;
+
+    return changed;
+  }
+
+  private void saveRecord() {
+    Console.println("Save Record");
+
+    int selectedRow = mJTableDetails.getSelectedRow();
+    ImageLibRecord theRecord = (ImageLibRecord) mTheRecords.get(mTableSorter.modelIndex(selectedRow));
+
+    theRecord.setAdName(txtAdName.getText());
+    theRecord.setAreaName(txtAreaName.getText());
+    theRecord.setRegion(txtRegion.getText());
+    theRecord.setNotes(txtNotes.getText());
+
+    // Ad Size Combo
+    dropdownItem theItem = (dropdownItem) cboAdSize.getSelectedItem();
+    theRecord.setAdSizeId(theItem.getId());
+
+    // Ad Quality Combo
+    theItem = (dropdownItem) cboAdQuality.getSelectedItem();
+    theRecord.setAdQualityId(theItem.getId());
+
+    theRecord.save(mCamsDB);
+  }
+
+  private void jbInit() throws Exception {
+    imageSave = new ImageIcon(cams.imagelib.ImageLibFrame.class.getResource("save.png"));
+    imageCancel = new ImageIcon(cams.imagelib.ImageLibFrame.class.getResource("erase.png"));
+    imageFirst = new ImageIcon(cams.imagelib.ImageLibFrame.class.getResource("first.png"));
+    imagePrev = new ImageIcon(cams.imagelib.ImageLibFrame.class.getResource("prev.png"));
+    imageNext = new ImageIcon(cams.imagelib.ImageLibFrame.class.getResource("next.png"));
+    imageLast = new ImageIcon(cams.imagelib.ImageLibFrame.class.getResource("last.png"));
+    titledBorder1 = new TitledBorder("");
+    panel1.setLayout(borderLayout1);
+    this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+    this.setJMenuBar(jMenuBar1);
+    this.setModal(true);
+    this.setResizable(false);
+    this.addWindowListener(new RecordDetailsDialog_this_windowAdapter(this));
+    jPanel1.setBorder(BorderFactory.createEtchedBorder());
+    jPanel1.setMinimumSize(new Dimension(337, 447));
+    jPanel1.setPreferredSize(new Dimension(337, 447));
+    jPanel1.setLayout(xYLayout2);
+    jLabel1.setFont(new java.awt.Font("Dialog", 1, 11));
+    jLabel1.setText("Region");
+    jLabel4.setText("Area Name");
+    jLabel4.setFont(new java.awt.Font("Dialog", 1, 11));
+    jLabel6.setText("Ad Name");
+    jLabel6.setFont(new java.awt.Font("Dialog", 1, 11));
+    jLabel7.setText("Record Name");
+    jLabel7.setFont(new java.awt.Font("Dialog", 1, 11));
+    txtRecordName.setFont(new java.awt.Font("Dialog", 1, 11));
+    txtRecordName.setBorder(BorderFactory.createLoweredBevelBorder());
+    txtRecordName.setEditable(false);
+    txtRecordName.setText("");
+    jTextField2.setText("");
+    txtAdName.setBorder(BorderFactory.createLoweredBevelBorder());
+    txtAdName.setText("");
+    txtAreaName.setText("");
+    txtAreaName.setBorder(BorderFactory.createLoweredBevelBorder());
+    txtRegion.setText("");
+    txtRegion.setBorder(BorderFactory.createLoweredBevelBorder());
+    cboAdSize.setBorder(BorderFactory.createLoweredBevelBorder());
+    jLabel2.setText("Ad Size");
+    jLabel2.setFont(new java.awt.Font("Dialog", 1, 11));
+    cboAdQuality.setBorder(BorderFactory.createLoweredBevelBorder());
+    jLabel3.setFont(new java.awt.Font("Dialog", 1, 11));
+    jLabel3.setText("Quality of Ad");
+    jLabel5.setText("Thumbnail");
+    jLabel5.setFont(new java.awt.Font("Dialog", 1, 11));
+    jlblPreview.setBackground(Color.white);
+    jlblPreview.setBorder(BorderFactory.createEtchedBorder());
+    jlblPreview.setHorizontalAlignment(SwingConstants.CENTER);
+    jlblPreview.setText("");
+    jLabel8.setFont(new java.awt.Font("Dialog", 1, 11));
+    jLabel8.setText("Notes");
+    jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    jScrollPane1.setBorder(BorderFactory.createLoweredBevelBorder());
+    jmnuFirst.addActionListener(new RecordDetailsDialog_jmnuFirst_actionAdapter(this));
+    jmnuPrevious.addActionListener(new RecordDetailsDialog_jmnuPrevious_actionAdapter(this));
+    jmnuNext.addActionListener(new RecordDetailsDialog_jmnuNext_actionAdapter(this));
+    jmnuLast.addActionListener(new RecordDetailsDialog_jmnuLast_actionAdapter(this));
+    jmnuClose.addActionListener(new RecordDetailsDialog_jmnuClose_actionAdapter(this));
+    jbtnSave.setBorder(null);
+    jbtnSave.setMaximumSize(new Dimension(23, 23));
+    jbtnSave.setMinimumSize(new Dimension(23, 23));
+    jbtnSave.setOpaque(true);
+    jbtnSave.setPreferredSize(new Dimension(23, 23));
+    jbtnSave.setToolTipText("Save");
+    jbtnSave.setHorizontalTextPosition(SwingConstants.TRAILING);
+    jbtnSave.setIcon(imageSave);
+    jbtnSave.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        jbtnSave_actionPerformed(e);
+      }
+    });
+    jToolBar.setFloatable(false);
+    jbtnCancel.setIcon(imageCancel);
+    jbtnCancel.addActionListener(new RecordDetailsDialog_jbtnCancel_actionAdapter(this));
+    jbtnCancel.setHorizontalTextPosition(SwingConstants.TRAILING);
+    jbtnCancel.setBorder(null);
+    jbtnCancel.setMaximumSize(new Dimension(23, 23));
+    jbtnCancel.setMinimumSize(new Dimension(23, 23));
+    jbtnCancel.setOpaque(true);
+    jbtnCancel.setPreferredSize(new Dimension(23, 23));
+    jbtnCancel.setToolTipText("Cancel");
+    jbtnFirst.setIcon(imageFirst);
+    jbtnFirst.addActionListener(new RecordDetailsDialog_jbtnFirst_actionAdapter(this));
+    jbtnFirst.setHorizontalTextPosition(SwingConstants.TRAILING);
+    jbtnFirst.setBorder(null);
+    jbtnFirst.setMaximumSize(new Dimension(23, 23));
+    jbtnFirst.setMinimumSize(new Dimension(23, 23));
+    jbtnFirst.setOpaque(true);
+    jbtnFirst.setPreferredSize(new Dimension(23, 23));
+    jbtnFirst.setToolTipText("First");
+    jbtnPrev.setIcon(imagePrev);
+    jbtnPrev.addActionListener(new RecordDetailsDialog_jbtnPrev_actionAdapter(this));
+    jbtnPrev.setHorizontalTextPosition(SwingConstants.TRAILING);
+    jbtnPrev.setBorder(null);
+    jbtnPrev.setMaximumSize(new Dimension(23, 23));
+    jbtnPrev.setMinimumSize(new Dimension(23, 23));
+    jbtnPrev.setOpaque(true);
+    jbtnPrev.setPreferredSize(new Dimension(23, 23));
+    jbtnPrev.setToolTipText("Previous");
+    jbtnNext.setIcon(imageNext);
+    jbtnNext.addActionListener(new RecordDetailsDialog_jbtnNext_actionAdapter(this));
+    jbtnNext.setHorizontalTextPosition(SwingConstants.TRAILING);
+    jbtnNext.setBorder(null);
+    jbtnNext.setMaximumSize(new Dimension(23, 23));
+    jbtnNext.setMinimumSize(new Dimension(23, 23));
+    jbtnNext.setOpaque(true);
+    jbtnNext.setPreferredSize(new Dimension(23, 23));
+    jbtnNext.setToolTipText("Next");
+    jbtnLast.setIcon(imageLast);
+    jbtnLast.addActionListener(new RecordDetailsDialog_jbtnLast_actionAdapter(this));
+    jbtnLast.setHorizontalTextPosition(SwingConstants.TRAILING);
+    jbtnLast.setBorder(null);
+    jbtnLast.setMaximumSize(new Dimension(23, 23));
+    jbtnLast.setMinimumSize(new Dimension(23, 23));
+    jbtnLast.setOpaque(true);
+    jbtnLast.setPreferredSize(new Dimension(23, 23));
+    jbtnLast.setToolTipText("Last");
+    jmnuCancel.addActionListener(new RecordDetailsDialog_jmnuCancel_actionAdapter(this));
+    jmnuSave.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        jbtnSave_actionPerformed(e);
+      }
+    });
+    txtNotes.setFont(new java.awt.Font("Dialog", 0, 11));
+    getContentPane().add(panel1);
+    panel1.add(jPanel1, BorderLayout.CENTER);
+    jPanel1.add(txtRecordName,          new XYConstraints(85, 2, 241, 18));
+    jPanel1.add(txtAdName,       new XYConstraints(85, 26, 241, 18));
+    jPanel1.add(txtAreaName,      new XYConstraints(85, 50, 241, 18));
+    jPanel1.add(txtRegion,        new XYConstraints(85, 74, 241, 18));
+    jPanel1.add(jLabel6,    new XYConstraints(6, 28, 74, -1));
+    jPanel1.add(jLabel1,    new XYConstraints(6, 76, 65, -1));
+    jPanel1.add(jLabel4,          new XYConstraints(6, 52, 73, -1));
+    jPanel1.add(jLabel7,       new XYConstraints(6, 4, 77, -1));
+    jPanel1.add(cboAdSize,      new XYConstraints(85, 99, 241, 18));
+    jPanel1.add(jLabel2,     new XYConstraints(6, 102, 65, -1));
+    jPanel1.add(cboAdQuality,             new XYConstraints(85, 124, 241, 18));
+    jPanel1.add(jLabel3,       new XYConstraints(6, 126, 75, -1));
+    jMenuAsset.setText("Asset");
+    jmnuSave.setText("Save Changes");
+    jmnuCancel.setText("Cancel Changes");
+    jmnuFirst.setActionCommand("First Asset");
+    jmnuFirst.setText("First Asset");
+    jmnuPrevious.setText("Previous Asset");
+    jmnuNext.setText("Next Asset");
+    jmnuLast.setText("Last Asset");
+    jmnuClose.setText("Close");
+    jMenuBar1.add(jMenuAsset);
+    jMenuAsset.add(jmnuSave);
+    jMenuAsset.add(jmnuCancel);
+    jMenuAsset.addSeparator();
+    jMenuAsset.add(jmnuFirst);
+    jMenuAsset.add(jmnuPrevious);
+    jMenuAsset.add(jmnuNext);
+    jMenuAsset.add(jmnuLast);
+    jMenuAsset.addSeparator();
+    jMenuAsset.add(jmnuClose);
+    jPanel1.add(jLabel5,   new XYConstraints(6, 149, 75, -1));
+    jPanel1.add(jlblPreview,      new XYConstraints(85, 152, 130, 130));
+    jPanel1.add(jScrollPane1,        new XYConstraints(85, 292, 241, 147));
+    jPanel1.add(jLabel8,    new XYConstraints(6, 293, 53, -1));
+    panel1.add(jToolBar, BorderLayout.NORTH);
+    jScrollPane1.getViewport().add(txtNotes, null);
+    jToolBar.add(jbtnSave, null);
+    jToolBar.add(jbtnCancel, null);
+    jToolBar.add(jbtnFirst, null);
+    jToolBar.add(jbtnPrev, null);
+    jToolBar.add(jbtnNext, null);
+    jToolBar.add(jbtnLast, null);
+  }
+
+  void jmnuFirst_actionPerformed(ActionEvent e) {
+    if (dataChanged()) saveRecord();
+
+    mJTableDetails.setRowSelectionInterval(0, 0);
+    showDetails();
+  }
+
+  void jmnuPrevious_actionPerformed(ActionEvent e) {
+    if (dataChanged()) saveRecord();
+
+    int row = mJTableDetails.getSelectedRow() - 1;
+    if (row < 0) row = 0;
+
+    mJTableDetails.setRowSelectionInterval(row, row);
+    showDetails();
+  }
+
+  void jmnuNext_actionPerformed(ActionEvent e) {
+    if (dataChanged()) saveRecord();
+
+    int row = mJTableDetails.getSelectedRow() + 1;
+    if (row >= mJTableDetails.getRowCount()) row = mJTableDetails.getRowCount() - 1;
+
+    mJTableDetails.setRowSelectionInterval(row, row);
+    showDetails();
+  }
+
+  void jmnuLast_actionPerformed(ActionEvent e) {
+    if (dataChanged()) saveRecord();
+
+    int row = mJTableDetails.getRowCount() - 1;
+    mJTableDetails.setRowSelectionInterval(row, row);
+    showDetails();
+  }
+
+  void jmnuClose_actionPerformed(ActionEvent e) {
+    if (dataChanged()) {
+      int response = JOptionPane.showConfirmDialog(this,
+          "Save changes made to this record before closing?",
+          "Close and Lose Changes",
+          JOptionPane.YES_NO_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
+
+      if (response == JOptionPane.YES_OPTION)
+        saveRecord();
+      else if (response == JOptionPane.CANCEL_OPTION)
+        return;
+    }
+    dispose();
+  }
+
+  void jmnuCancel_actionPerformed(ActionEvent e) {
+    showDetails();
+  }
+
+  void this_windowClosing(WindowEvent e) {
+    if (dataChanged()) {
+      int response = JOptionPane.showConfirmDialog(this,
+                                  "Save changes made to this record before closing?",
+                                  "Close and Lose Changes",
+                                  JOptionPane.YES_NO_CANCEL_OPTION,
+                                  JOptionPane.QUESTION_MESSAGE);
+
+      if (response == JOptionPane.YES_OPTION)
+        saveRecord();
+      else if (response == JOptionPane.CANCEL_OPTION)
+        return;
+    }
+    dispose();
+  }
+
+  void jbtnSave_actionPerformed(ActionEvent e) {
+    saveRecord();
+  }
+
+}
+
+class RecordDetailsDialog_jmnuFirst_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jmnuFirst_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuFirst_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jmnuPrevious_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jmnuPrevious_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuPrevious_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jmnuNext_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jmnuNext_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuNext_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jmnuLast_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jmnuLast_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuLast_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jmnuClose_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jmnuClose_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuClose_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jbtnFirst_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jbtnFirst_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuFirst_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jbtnPrev_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jbtnPrev_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuPrevious_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jbtnNext_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jbtnNext_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuNext_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jbtnLast_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jbtnLast_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuLast_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jmnuCancel_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jmnuCancel_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuCancel_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_jbtnCancel_actionAdapter implements java.awt.event.ActionListener {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_jbtnCancel_actionAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jmnuCancel_actionPerformed(e);
+  }
+}
+
+class RecordDetailsDialog_this_windowAdapter extends java.awt.event.WindowAdapter {
+  RecordDetailsDialog adaptee;
+
+  RecordDetailsDialog_this_windowAdapter(RecordDetailsDialog adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void windowClosing(WindowEvent e) {
+    adaptee.this_windowClosing(e);
+  }
+}
