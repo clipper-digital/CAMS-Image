@@ -9,7 +9,7 @@ import java.util.*;
 import javax.swing.*;
 
 import cams.imagelib.importrecord.*;
-import cams.console.*;
+// import cams.console.*;
 
 /**
  * <p>Title: Clipper Asset Management System</p>
@@ -47,7 +47,7 @@ public class MyDropTargetListener implements DropTargetListener {
 
     Transferable transferable = dtde.getTransferable();
     if (!transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-      Console.println("Attempting to drop incorrect type of object here (not File List).");
+      cams.console.Console.println("Attempting to drop incorrect type of object here (not File List).");
       dtde.dropComplete(true);
       return;
     }
@@ -67,7 +67,7 @@ public class MyDropTargetListener implements DropTargetListener {
 //      ((ImportRecordFrame)mParent).processDroppedFiles(theFileList);
     }
     catch (Exception ex) {
-      Console.println("MyDropTargetListener Exception:" + ex.getMessage());
+      cams.console.Console.println("MyDropTargetListener Exception:" + ex.getMessage());
     }
     finally {
       dtde.dropComplete(true);

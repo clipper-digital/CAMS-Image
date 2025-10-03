@@ -6,7 +6,7 @@ import java.text.*;
 
 import cams.database.*;
 import java.sql.*;
-import cams.console.*;
+// import cams.console.*;
 
 /**
  * <p>Title: Clipper Asset Management System</p>
@@ -118,7 +118,7 @@ public class ImageLibRecord {
       mPriorityDisplay = rs.getBoolean("PriorityDisplay");
     }
     catch (Exception ex) {
-      Console.println("Error creating ImageLibRecord: " + ex.getMessage());
+      cams.console.Console.println("Error creating ImageLibRecord: " + ex.getMessage());
     }
 
   }
@@ -245,7 +245,7 @@ public class ImageLibRecord {
         rs.close();
       }
       catch (Exception ex) {
-        Console.println("getCategories(camsDB): " + ex.getMessage());
+        cams.console.Console.println("getCategories(camsDB): " + ex.getMessage());
       }
     }
     Collections.sort(mCategories);
@@ -272,7 +272,7 @@ public class ImageLibRecord {
         rs.close();
       }
       catch (Exception ex) {
-        Console.println("getKeywords(camsDB): " + ex.getMessage());
+        cams.console.Console.println("getKeywords(camsDB): " + ex.getMessage());
       }
     }
     Collections.sort(mKeywords);
@@ -490,7 +490,7 @@ public class ImageLibRecord {
       result = true;
     }
     catch (Exception ex) {
-      Console.println("ImageLibRecord.save(): " + ex.getMessage());
+      cams.console.Console.println("ImageLibRecord.save(): " + ex.getMessage());
     }
     finally {
       try {
@@ -531,7 +531,7 @@ public class ImageLibRecord {
       result = true;
     }
     catch (Exception ex) {
-      Console.println("ImageLibRecord.redirectReference(): " + ex.getMessage());
+      cams.console.Console.println("ImageLibRecord.redirectReference(): " + ex.getMessage());
     }
     finally {
       try {
@@ -564,7 +564,7 @@ public class ImageLibRecord {
       }
     }
     catch (Exception ex) {
-      Console.println("ImageLibRecord.updateRecordCategories(): " + ex.getMessage());
+      cams.console.Console.println("ImageLibRecord.updateRecordCategories(): " + ex.getMessage());
     }
     finally {
       try {
@@ -597,7 +597,7 @@ public class ImageLibRecord {
       }
     }
     catch (Exception ex) {
-      Console.println("ImageLibRecord.updateRecordKeywords(): " + ex.getMessage());
+      cams.console.Console.println("ImageLibRecord.updateRecordKeywords(): " + ex.getMessage());
     }
     finally {
       try {

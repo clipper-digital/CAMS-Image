@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.*;
 
 import cams.database.*;
-import cams.console.*;
+// import cams.console.*;
 import cams.imagelib.*;
 import javax.swing.event.*;
 
@@ -238,7 +238,7 @@ public class KeywordDialog extends JDialog {
         }
       }
       catch (Exception ex) {
-        Console.println("KeywordDialog:refreshAllKeywords: " + ex.getMessage());
+        cams.console.Console.println("KeywordDialog:refreshAllKeywords: " + ex.getMessage());
       }
       finally {
         try {
@@ -254,7 +254,7 @@ public class KeywordDialog extends JDialog {
 
       setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
       long endTime = new java.util.Date().getTime();
-      Console.println("refreshKeywords: " + (endTime - startTime) + " ms");
+      cams.console.Console.println("refreshKeywords: " + (endTime - startTime) + " ms");
 
       setSelectedKeywords();
     }
@@ -498,7 +498,7 @@ public class KeywordDialog extends JDialog {
 
     }
     catch (Exception ex) {
-      Console.println("KeywordDialog:AddKeyword: " + ex.getMessage());
+      cams.console.Console.println("KeywordDialog:AddKeyword: " + ex.getMessage());
     }
   }
 

@@ -9,7 +9,7 @@ import javax.swing.tree.*;
 import java.util.*;
 
 import cams.imagelib.*;
-import cams.console.*;
+// import cams.console.*;
 
 public class CategoryDialog extends JDialog {
   private JFrame mImageLibFrame = null;
@@ -118,15 +118,15 @@ public class CategoryDialog extends JDialog {
     ImageLibFrame imageFrame = (ImageLibFrame) mImageLibFrame;
     DefaultMutableTreeNode theCategoryNode = imageFrame.findTreeCatalogNode(catalogId);
 
-//    Console.println("Adding Child Nodes to Tree");
+//    cams.console.Console.println("Adding Child Nodes to Tree");
     addChildrenToTree(treeTop, theCategoryNode);
 
-//    Console.println("Children Added.. Expanding rows...");
+//    cams.console.Console.println("Children Added.. Expanding rows...");
 //    for (int i=0; i < jTreeCategories.getRowCount(); i++) {
 //      jTreeCategories.expandRow(i);
 //      jTreeCategories.updateUI();
 //    }
-//    Console.println("Rows expanded.");
+//    cams.console.Console.println("Rows expanded.");
   }
 
   private void addChildrenToTree(DefaultMutableTreeNode myRoot, DefaultMutableTreeNode otherRoot) {

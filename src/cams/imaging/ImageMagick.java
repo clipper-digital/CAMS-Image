@@ -4,7 +4,7 @@ import java.text.*;
 import java.util.*;
 import java.io.*;
 
-import cams.console.*;
+// import cams.console.*;
 import cams.imagelib.*;
 import cams.database.*;
 
@@ -36,7 +36,7 @@ public class ImageMagick {
 //      mImageTimeout = Long.parseLong(mProperties.getProperty("ConvertTimeout", "45")) * 1000;
     }
     catch (Exception ex) {
-      Console.println("ImageMagick(): " + ex.toString());
+      cams.console.Console.println("ImageMagick(): " + ex.toString());
     }
   }
 
@@ -74,7 +74,7 @@ public class ImageMagick {
     String results = "";
 
     try {
-      Console.println("shellCmd(" + theCommand + ")");
+      cams.console.Console.println("shellCmd(" + theCommand + ")");
       Runtime r = Runtime.getRuntime();
       Properties props = System.getProperties();
       String osname = props.getProperty("os.name");
@@ -103,7 +103,7 @@ public class ImageMagick {
       }
       else if (getProcessExitValue(p) == -999) { // Process Still Running
         p.destroy(); // Kill Process
-        Console.println("Error Waiting for ImageMagick to return. (Waited " + getImageTimout()/1000 + " seconds)");
+        cams.console.Console.println("Error Waiting for ImageMagick to return. (Waited " + getImageTimout()/1000 + " seconds)");
         results = null;
       }
 
@@ -113,11 +113,11 @@ public class ImageMagick {
         br.close();
       }
       catch (Exception ex) {
-        Console.println("ImageMagick:CloseStreams: " + ex.getMessage());
+        cams.console.Console.println("ImageMagick:CloseStreams: " + ex.getMessage());
       }
     }
     catch (Exception ex) {
-      Console.println("ImageMagick:shellCmd: " + ex.getMessage());
+      cams.console.Console.println("ImageMagick:shellCmd: " + ex.getMessage());
     }
     return results;
   }
@@ -135,7 +135,7 @@ public class ImageMagick {
     String results = "";
 
     for (int i=0; i < theCommands.length; i++) {
-      Console.println("  " + (i+1) + ": " + theCommands[i]);
+      cams.console.Console.println("  " + (i+1) + ": " + theCommands[i]);
     }
     try {
       Runtime r = Runtime.getRuntime();
@@ -148,7 +148,7 @@ public class ImageMagick {
       }
     }
     catch (Exception ex) {
-      Console.println("ImageMagick:shellCmd: " + ex.getMessage());
+      cams.console.Console.println("ImageMagick:shellCmd: " + ex.getMessage());
     }
     return results;
   }
@@ -273,11 +273,11 @@ public class ImageMagick {
           deleteCount++;
         }
         catch (Exception ex) {
-          Console.println("Could not delete file " + theFiles[i].getName());
+          cams.console.Console.println("Could not delete file " + theFiles[i].getName());
         }
       }
     }
-    Console.println("Deleted " + deleteCount + " files older than " + daysOld +
+    cams.console.Console.println("Deleted " + deleteCount + " files older than " + daysOld +
                     " days old from the Temp folder");
   }
 

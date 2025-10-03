@@ -5,7 +5,7 @@ import java.util.*;
 import java.text.*;
 import cams.database.*;
 import java.sql.*;
-import cams.console.*;
+// import cams.console.*;
 
 /**
  * ImageLibRecordList: Extends ArrayList to hold a list of
@@ -71,7 +71,7 @@ public class ImageLibRecordList extends ArrayList {
         rs.close();
       }
       catch (Exception ex) {
-        Console.println("Error Getting Batch ID: " + ex.getMessage());
+        cams.console.Console.println("Error Getting Batch ID: " + ex.getMessage());
       }
     }
 
@@ -84,7 +84,7 @@ public class ImageLibRecordList extends ArrayList {
   public void add(File theFile) {
     // Check for .DS_STORE Files
     if (theFile.getName().toUpperCase().indexOf(".DS_STORE") > -1) {
-      Console.println("Skipping .DS_Store File");
+      cams.console.Console.println("Skipping .DS_Store File");
       return;
     }
 
@@ -137,7 +137,7 @@ public class ImageLibRecordList extends ArrayList {
     }
     catch (Exception ex) {
       result = false;
-      Console.println("MktSupportRecordList:updateThumbnails: " + ex.getMessage());
+      cams.console.Console.println("MktSupportRecordList:updateThumbnails: " + ex.getMessage());
     }
     finally {
       try {
@@ -186,7 +186,7 @@ public class ImageLibRecordList extends ArrayList {
       rs.close();
 
       if (result != null) {
-        Console.println("Matching record found with FullPath = '" + fullPath +
+        cams.console.Console.println("Matching record found with FullPath = '" + fullPath +
                         "' in Catalog " + theRecord.getCatalogName());
       }
       else { // Check for Filename match only (handle "pending" records)
@@ -209,11 +209,11 @@ public class ImageLibRecordList extends ArrayList {
             ") " +
             "AND catalog_id = " + theRecord.getCatalogId();
         rs = theCamsDB.query(sql);
-//      Console.println("Looking for 'PENDING' Match: " + sql);
+//      cams.console.Console.println("Looking for 'PENDING' Match: " + sql);
         if (rs.next()) {
           theRecord.setRecordId(rs.getInt(1));
           result = rs.getTimestamp(2);
-          Console.println("Found match by FileName/RecordName/ScanNum and FullPath='Pending'");
+          cams.console.Console.println("Found match by FileName/RecordName/ScanNum and FullPath='Pending'");
           if (mCamsDB.windowsOS())
             sql = "UPDATE ImageLibRecord SET FullPathWin = '" +
                 theRecord.getFullPathWin().replaceAll("'", "''") + "', " +
@@ -233,7 +233,7 @@ public class ImageLibRecordList extends ArrayList {
       }
     }
     catch (Exception ex) {
-      Console.println("ImageLibRecordList:recordExists: " + ex.getMessage());
+      cams.console.Console.println("ImageLibRecordList:recordExists: " + ex.getMessage());
     }
 
     return result;
@@ -327,7 +327,7 @@ public class ImageLibRecordList extends ArrayList {
       rs.close();
     }
     catch (Exception ex) {
-      Console.println("ImageLibRecordList:createRecord: " + ex.getMessage());
+      cams.console.Console.println("ImageLibRecordList:createRecord: " + ex.getMessage());
     }
 
     // Add the Notes
@@ -338,7 +338,7 @@ public class ImageLibRecordList extends ArrayList {
       mCamsDB.execute(sql);
     }
     catch (Exception ex) {
-      Console.println("ImageLibRecordList:createRecord (notes): " + ex.getMessage());
+      cams.console.Console.println("ImageLibRecordList:createRecord (notes): " + ex.getMessage());
     }
 
   }

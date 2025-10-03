@@ -10,7 +10,7 @@ import java.util.*;
 import cams.database.*;
 import cams.imagelib.*;
 import cams.imaging.*;
-import cams.console.*;
+// import cams.console.*;
 
 /**
  * <p>Title: Clipper Asset Management System</p>
@@ -27,7 +27,7 @@ public class CAMS {
 
   //Construct the application
   public CAMS() {
-    Console.println("Starting Up...");
+    cams.console.Console.println("Starting Up...");
     SplashFrame splashFrame = new SplashFrame();
     //Validate frames that have preset sizes
     //Pack frames that have useful preferred size info, e.g. from their layout
@@ -52,7 +52,7 @@ public class CAMS {
 
     Properties p = System.getProperties();
     String osname = p.getProperty("os.name");
-    Console.println("os.name = " + osname);
+    cams.console.Console.println("os.name = " + osname);
 
     // Initialize Database Connection
     splashFrame.jlblWait.setText("Connecting to Database...");
@@ -97,7 +97,7 @@ public class CAMS {
     splashFrame.jlblWait.setText("Checking Graphics Engine...");
     // Test ImageMagick
     ImageMagick imaging = new ImageMagick(mCamsDB);
-    Console.println("***************************\n" +
+    cams.console.Console.println("***************************\n" +
                        "Imaging Test = \n" +
                        imaging.test() +
                        "***************************");

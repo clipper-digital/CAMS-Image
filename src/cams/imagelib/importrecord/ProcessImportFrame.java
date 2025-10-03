@@ -13,7 +13,7 @@ import javax.swing.border.*;
 import cams.imagelib.*;
 import cams.database.*;
 import cams.imaging.*;
-import cams.console.*;
+// import cams.console.*;
 
 /**
  * <p>Title: Clipper Asset Management System</p>
@@ -189,7 +189,7 @@ public class ProcessImportFrame extends JFrame {
                 newCategory.parent_id = mRecords.getParentId(thisPath);
                 newCategory.catalog_id = mRecords.getCatalogId();
                 newCategory.create(mCamsDB);
-                Console.println("Creating Category: " + thisPath +
+                cams.console.Console.println("Creating Category: " + thisPath +
                                 ", parent_id = " + newCategory.parent_id +
                                 ", new id = " + newCategory.id);
                 mRecords.addCategory(newCategory);
@@ -237,7 +237,7 @@ public class ProcessImportFrame extends JFrame {
                 lastModified = null;  // So it will re-thumbnail
               }
               catch (Exception ex) {
-                Console.println("Error updating FileDate on existing record: " + ex.getMessage());
+                cams.console.Console.println("Error updating FileDate on existing record: " + ex.getMessage());
               }
               finally {
                 try {
@@ -277,7 +277,7 @@ public class ProcessImportFrame extends JFrame {
                 // Thumbnailing Failed
                 if (new java.util.Date().getTime() - theRecord.getRecordCreated().getTime() < 10000) {
                   // Record just created (< 10 sec ago)
-                  Console.println("Invalid Image File (Could not thumbnail).  Deleting/Skipping Record.");
+                  cams.console.Console.println("Invalid Image File (Could not thumbnail).  Deleting/Skipping Record.");
                   mCreatedRecordCount--;
                   mRecords.deleteRecord(theRecord);
                 }
@@ -300,7 +300,7 @@ public class ProcessImportFrame extends JFrame {
       mThisFrame.jlblCurrentFileName.setText("");
       mThisFrame.jlblCurrentStatus.setText("Finished!!");
 
-      Console.println(mCreatedRecordCount + " Records Imported.");
+      cams.console.Console.println(mCreatedRecordCount + " Records Imported.");
 
       JOptionPane.showMessageDialog(mThisFrame,
                                     mRecords.size() + " files dragged in, " +

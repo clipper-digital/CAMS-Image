@@ -14,7 +14,7 @@ import com.borland.jbcl.layout.*;
 
 import cams.database.*;
 import cams.imagelib.*;
-import cams.console.*;
+// import cams.console.*;
 import cams.imagelib.detaildialogs.*;
 
 /**
@@ -183,7 +183,7 @@ public class ImportRecordFrame extends JFrame {
       }
     }
     catch (Exception ex) {
-      Console.println("refreshCatalogList: " + ex.toString());
+      cams.console.Console.println("refreshCatalogList: " + ex.toString());
     }
     finally {
       if (rs != null) {
@@ -214,7 +214,7 @@ public class ImportRecordFrame extends JFrame {
       return;
     }
 
-    Console.println(theFileList.size() + " Files/Folders Dragged In.");
+    cams.console.Console.println(theFileList.size() + " Files/Folders Dragged In.");
 
     CatalogEntry theCatalogEntry = (CatalogEntry) jlistCatalog.getSelectedValue();
     mRecords = new ImageLibRecordList(mCamsDB, theCatalogEntry.catalog_id,
@@ -223,12 +223,12 @@ public class ImportRecordFrame extends JFrame {
     for (int i = 0; i < theFileList.size(); i++) {
       File theFile = (File) theFileList.get(i);
       if (theFile.isDirectory()) {
-        Console.println("  " + (i + 1) + ": [Directory] " + theFile.getAbsolutePath());
+        cams.console.Console.println("  " + (i + 1) + ": [Directory] " + theFile.getAbsolutePath());
       }
       else {
-        Console.println("  " + (i + 1) + ": [File] " + theFile.getAbsolutePath());      }
+        cams.console.Console.println("  " + (i + 1) + ": [File] " + theFile.getAbsolutePath());      }
     }
-    Console.println("");
+    cams.console.Console.println("");
 
     // Display Appropriate Details Dialog for common attributes
     if (jckThumbnails.isSelected())
@@ -305,7 +305,7 @@ public class ImportRecordFrame extends JFrame {
   public void processDroppedFiles_Image(ArrayList theFileList) {
     if (theFileList.size() == 0) return;
 
-    Console.println(theFileList.size() + " Files/Folders Dragged In.");
+    cams.console.Console.println(theFileList.size() + " Files/Folders Dragged In.");
 
     CatalogEntry theCatalogEntry = (CatalogEntry) jlistCatalog.getSelectedValue();
 
@@ -333,12 +333,12 @@ public class ImportRecordFrame extends JFrame {
     for (int i = 0; i < theFileList.size(); i++) {
       theFile = (File) theFileList.get(i);
       if (theFile.isDirectory()) {
-        Console.println("  " + (i + 1) + ": [Directory] " + theFile.getAbsolutePath());
+        cams.console.Console.println("  " + (i + 1) + ": [Directory] " + theFile.getAbsolutePath());
       }
       else {
-        Console.println("  " + (i + 1) + ": [File] " + theFile.getAbsolutePath());      }
+        cams.console.Console.println("  " + (i + 1) + ": [File] " + theFile.getAbsolutePath());      }
     }
-    Console.println("");
+    cams.console.Console.println("");
 
     jpnlDropHere.setVisible(false);
     jlistCatalog.setEnabled(false);
@@ -363,7 +363,7 @@ public class ImportRecordFrame extends JFrame {
     public void run() {
       boolean mCreateNewCategories = false;
 
-      Console.println("ScanFoldersThread Thread Start");
+      cams.console.Console.println("ScanFoldersThread Thread Start");
       // Create a List (ImageLibRecordList) of ImageLibRecord of all of the files
       mRecords.clear();
       for (int i=0; i < mDroppedFiles.size(); i++) {
@@ -449,13 +449,13 @@ public class ImportRecordFrame extends JFrame {
 
   class UpdateStatusThread extends Thread {
     public void run() {
-      Console.println("UpdateStatus Thread Start");
+      cams.console.Console.println("UpdateStatus Thread Start");
       while (mUpdateStatus) {
         jlblStatus.setText(mRecords.size() + " Files Scanned.");
         jlblStatus.updateUI();
         try { Thread.sleep(250); } catch (Exception ex) {}
       }
-      Console.println("UpdateStatus Thread Finish");
+      cams.console.Console.println("UpdateStatus Thread Finish");
     }
   };
 

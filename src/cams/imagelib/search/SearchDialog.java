@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import cams.console.*;
+// import cams.console.*;
 import cams.database.*;
 import cams.imagelib.*;
 import com.borland.jbcl.layout.*;
@@ -668,14 +668,14 @@ public class SearchDialog extends JDialog {
     if (mOrderBy.endsWith(","))
       mOrderBy = mOrderBy.substring(0, mOrderBy.length() - 1);
 
-    Console.println("Search sql = \n" + sql);
-    Console.println("Order By = " + mOrderBy);
+    cams.console.Console.println("Search sql = \n" + sql);
+    cams.console.Console.println("Order By = " + mOrderBy);
 
     ResultSet rs = null;
 
     try {
       mSearchResultCount = mCamsDB.executeUpdate(sql);
-      Console.println(mSearchResultCount + " Rows Found.");
+      cams.console.Console.println(mSearchResultCount + " Rows Found.");
 
       setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
@@ -702,7 +702,7 @@ public class SearchDialog extends JDialog {
       }
     }
     catch (Exception ex) {
-      Console.println("Search Error: " + ex.getMessage());
+      cams.console.Console.println("Search Error: " + ex.getMessage());
       if (rs != null) {
         try { rs.close(); rs = null; } catch (Exception x) {}
       }
@@ -822,14 +822,14 @@ public class SearchDialog extends JDialog {
     if (mOrderBy.endsWith(","))
       mOrderBy = mOrderBy.substring(0, mOrderBy.length() - 1);
 
-    Console.println("Search sql = " + sql);
-    Console.println("Order By = " + mOrderBy);
+    cams.console.Console.println("Search sql = " + sql);
+    cams.console.Console.println("Order By = " + mOrderBy);
 
     ResultSet rs = null;
 
     try {
       mSearchResultCount = mCamsDB.executeUpdate(sql);
-      Console.println(mSearchResultCount + " Rows Found.");
+      cams.console.Console.println(mSearchResultCount + " Rows Found.");
 
       setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
@@ -842,7 +842,7 @@ public class SearchDialog extends JDialog {
         hide();
     }
     catch (Exception ex) {
-      Console.println("Search Error: " + ex.getMessage());
+      cams.console.Console.println("Search Error: " + ex.getMessage());
       if (rs != null) {
         try { rs.close(); rs = null; } catch (Exception x) {}
       }
@@ -914,7 +914,7 @@ public class SearchDialog extends JDialog {
       rs.close(); rs = null;
     }
     catch (Exception ex) {
-      Console.println("SearchDialog:loadStatus: " + ex.getMessage());
+      cams.console.Console.println("SearchDialog:loadStatus: " + ex.getMessage());
     }
   }
 
@@ -935,7 +935,7 @@ public class SearchDialog extends JDialog {
       rs.close(); rs = null;
     }
     catch (Exception ex) {
-      Console.println("SearchDialog:loadReleases: " + ex.getMessage());
+      cams.console.Console.println("SearchDialog:loadReleases: " + ex.getMessage());
     }
   }
 

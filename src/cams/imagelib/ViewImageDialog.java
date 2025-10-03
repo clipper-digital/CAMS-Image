@@ -10,7 +10,7 @@ import java.io.*;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 
-import cams.console.*;
+// import cams.console.*;
 import cams.imaging.*;
 import cams.database.*;
 
@@ -248,7 +248,7 @@ public class ViewImageDialog extends JDialog {
       resetDialog();
     }
     catch (Exception ex) {
-      Console.println("Rotate JPG: " + ex.getMessage());
+      cams.console.Console.println("Rotate JPG: " + ex.getMessage());
     }
 
   }

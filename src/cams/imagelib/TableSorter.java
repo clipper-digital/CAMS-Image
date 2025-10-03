@@ -10,7 +10,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 
-import cams.console.*;
+// import cams.console.*;
 
 /**
  * TableSorter is a decorator for TableModels; adding sorting
@@ -225,7 +225,7 @@ public class TableSorter extends AbstractTableModel {
     private Row[] getViewToModel() {
         if ((viewToModel == null) || (viewToModel.length != tableModel.getRowCount())) {
 //          if ((viewToModel != null) && (viewToModel.length != tableModel.getRowCount())) {
-//            Console.println("Jeff: viewToModel doesn't match tableModel");
+//            cams.console.Console.println("Jeff: viewToModel doesn't match tableModel");
 //          }
             int tableModelRowCount = tableModel.getRowCount();
             viewToModel = new Row[tableModelRowCount];
@@ -245,7 +245,7 @@ public class TableSorter extends AbstractTableModel {
         return getViewToModel()[viewIndex].modelIndex;
       }
       catch (Exception ex) {
-        Console.println("modelIndex Exception: viewIndex = " + viewIndex +
+        cams.console.Console.println("modelIndex Exception: viewIndex = " + viewIndex +
                            ", getViewToModel().length = " + getViewToModel().length);
         return viewIndex;
       }

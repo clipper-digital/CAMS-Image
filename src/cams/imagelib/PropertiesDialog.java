@@ -8,7 +8,7 @@ import com.borland.jbcl.layout.*;
 import java.awt.event.*;
 
 import cams.database.*;
-import cams.console.*;
+// import cams.console.*;
 
 public class PropertiesDialog extends JDialog {
   private CamsDB mCamsDB = null;
@@ -245,7 +245,7 @@ public class PropertiesDialog extends JDialog {
         outstream.close();
       }
       catch (Exception ex) {
-        Console.println("PropertiesDialog: " + ex.getMessage());
+        cams.console.Console.println("PropertiesDialog: " + ex.getMessage());
         JOptionPane.showMessageDialog(this, "Error Saving Properties File to Disk: " +
                                       ex.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
       }

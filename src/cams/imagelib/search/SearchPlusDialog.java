@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import cams.console.*;
+// import cams.console.*;
 import cams.database.*;
 import cams.imagelib.*;
 import com.borland.jbcl.layout.*;
@@ -280,14 +280,14 @@ public class SearchPlusDialog  extends JDialog {
 
       sql += ") ORDER BY ImageLibRecordView.record_id";
 
-      Console.println("Search sql (Stock) = \n" + sql);
+      cams.console.Console.println("Search sql (Stock) = \n" + sql);
 
       try {
         mSearchResultCount = mCamsDB.executeUpdate(sql);
-        Console.println(mSearchResultCount + " Rows Found in Stock search (1 of 2).");
+        cams.console.Console.println(mSearchResultCount + " Rows Found in Stock search (1 of 2).");
       }
       catch (Exception ex) {
-        Console.println("Search Error: " + ex.getMessage());
+        cams.console.Console.println("Search Error: " + ex.getMessage());
         if (rs != null) {
           try { rs.close(); rs = null; } catch (Exception x) {}
         }
@@ -336,15 +336,15 @@ public class SearchPlusDialog  extends JDialog {
 
       sql += ") ORDER BY ImageLibRecordView.record_id";
 
-      Console.println("Search sql (Stock Misc) = \n" + sql);
+      cams.console.Console.println("Search sql (Stock Misc) = \n" + sql);
 
       try {
         int count = mCamsDB.executeUpdate(sql);
         mSearchResultCount += count;
-        Console.println(count + " Rows Found in Stock Misc search (2 of 2).");
+        cams.console.Console.println(count + " Rows Found in Stock Misc search (2 of 2).");
       }
       catch (Exception ex) {
-        Console.println("Search Error: " + ex.getMessage());
+        cams.console.Console.println("Search Error: " + ex.getMessage());
         if (rs != null) {
           try { rs.close(); rs = null; } catch (Exception x) {}
         }
@@ -422,14 +422,14 @@ public class SearchPlusDialog  extends JDialog {
 
       sql += ") ORDER BY ImageLibRecordView.record_id";
 
-      Console.println("Search sql (Exclusive) = \n" + sql);
+      cams.console.Console.println("Search sql (Exclusive) = \n" + sql);
 
       try {
         mSearchResultCount = mCamsDB.executeUpdate(sql);
-        Console.println(mSearchResultCount + " Rows Found in Exclusive + search.");
+        cams.console.Console.println(mSearchResultCount + " Rows Found in Exclusive + search.");
       }
       catch (Exception ex) {
-        Console.println("Search Error: " + ex.getMessage());
+        cams.console.Console.println("Search Error: " + ex.getMessage());
         if (rs != null) {
           try { rs.close(); rs = null; } catch (Exception x) {}
         }

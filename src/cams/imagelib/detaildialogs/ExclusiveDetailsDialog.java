@@ -15,7 +15,7 @@ import java.io.FileOutputStream;
 
 import cams.imagelib.*;
 import cams.database.*;
-import cams.console.*;
+// import cams.console.*;
 
 
 public class ExclusiveDetailsDialog extends JDialog {
@@ -912,7 +912,7 @@ public class ExclusiveDetailsDialog extends JDialog {
       rs.close(); rs = null;
     }
     catch (Exception ex) {
-      Console.println("ExclusiveDetailsDialog:loadStatus: " + ex.getMessage());
+      cams.console.Console.println("ExclusiveDetailsDialog:loadStatus: " + ex.getMessage());
     }
     cboStatus.setSelectedIndex(0);
   }
@@ -935,7 +935,7 @@ public class ExclusiveDetailsDialog extends JDialog {
       rs.close(); rs = null;
     }
     catch (Exception ex) {
-      Console.println("StockDetailsDialog:loadReleases: " + ex.getMessage());
+      cams.console.Console.println("StockDetailsDialog:loadReleases: " + ex.getMessage());
     }
     cboReleases.setSelectedIndex(0);
   }
@@ -1071,7 +1071,7 @@ public class ExclusiveDetailsDialog extends JDialog {
       }
       sql += " WHERE record_id = ";
 
-      Console.println("Batch Edit: " + sql);
+      cams.console.Console.println("Batch Edit: " + sql);
       for (int i=0; i < mSelectedRows.length; i++) {
         mCurrentRecord = ((ImageLibFrame) mParent).getImageRecordByRow(mSelectedRows[i]);
         mCamsDB.execute(sql + mCurrentRecord.getRecordId());
@@ -1224,86 +1224,86 @@ public class ExclusiveDetailsDialog extends JDialog {
   private boolean dataChanged() {
 
     if (!jtxtRecordName.getText().equals(mCurrentRecord.getRecordName())) {
-      Console.println("dataChanged: RecordName");
+      cams.console.Console.println("dataChanged: RecordName");
       return true;
     }
     if (!jtxtScanNum.getText().equals(mCurrentRecord.getScanNumber())) {
-      Console.println("dataChanged: ScanNumber");
+      cams.console.Console.println("dataChanged: ScanNumber");
       return true;
     }
     if (!jtxtKeyline.getText().equals(mCurrentRecord.getKeyline())) {
-      Console.println("dataChanged: KeyLine");
+      cams.console.Console.println("dataChanged: KeyLine");
       return true;
     }
     if (jckDontDelete.isSelected() != mCurrentRecord.getDontDelete()) {
-      Console.println("dataChanged: DontDelete");
+      cams.console.Console.println("dataChanged: DontDelete");
       return true;
     }
     if (jckWebDisplay.isSelected() != mCurrentRecord.getWebDisplay()) {
-      Console.println("dataChanged: WebDisplay");
+      cams.console.Console.println("dataChanged: WebDisplay");
       return true;
     }
     if (!jtxtCatalogUser.getText().equals(mCurrentRecord.getCatalogUser())) {
-      Console.println("dataChanged: CatalogUser");
+      cams.console.Console.println("dataChanged: CatalogUser");
       return true;
     }
 
     dropdownItem theStatus = (dropdownItem) cboStatus.getSelectedItem();
     if (theStatus.getId() != mCurrentRecord.getStatusId()) {
-      Console.println("dataChanged: StatusId");
+      cams.console.Console.println("dataChanged: StatusId");
       return true;
     }
 
     if (!jtxtCDName.getText().equals(mCurrentRecord.getCDName())) {
-      Console.println("dataChanged: CDName");
+      cams.console.Console.println("dataChanged: CDName");
       return true;
     }
     if (!jtxtUsageRules.getText().equals(mCurrentRecord.getUsageRules())) {
-      Console.println("dataChanged: UsageRules");
+      cams.console.Console.println("dataChanged: UsageRules");
       return true;
     }
     if (!jtxtNotes.getText().equals(mCurrentRecord.getNotes(mCamsDB))) {
-      Console.println("dataChanged: Notes");
+      cams.console.Console.println("dataChanged: Notes");
       return true;
     }
 
     dropdownItem theReleases = (dropdownItem) cboReleases.getSelectedItem();
     if (theReleases.getId() != mCurrentRecord.getReleaseId()) {
-      Console.println("dataChanged: ReleaseId");
+      cams.console.Console.println("dataChanged: ReleaseId");
       return true;
     }
 
     if (!jtxtKeywords.getText().equals(mCurrentRecord.getOriginalKeywords())) {
-      Console.println("dataChanged: OriginalKeywords");
+      cams.console.Console.println("dataChanged: OriginalKeywords");
       return true;
     }
     if (!jtxtArea.getText().equals(mCurrentRecord.getArea())) {
-      Console.println("dataChanged: Area");
+      cams.console.Console.println("dataChanged: Area");
       return true;
     }
     if (!jtxtAdvertiser.getText().equals(mCurrentRecord.getAdvertiser())) {
-      Console.println("dataChanged: Advertiser");
+      cams.console.Console.println("dataChanged: Advertiser");
       return true;
     }
 
     if (!jtxtMFRName.getText().equals(mCurrentRecord.getMFRName())) {
-      Console.println("dataChanged: MFRName");
+      cams.console.Console.println("dataChanged: MFRName");
       return true;
     }
     if (jckExclusiveToAdvert.isSelected() != mCurrentRecord.getExclusive()) {
-      Console.println("dataChanged: Exclusive");
+      cams.console.Console.println("dataChanged: Exclusive");
       return true;
     }
     if (jckOriginalOnFile.isSelected() != mCurrentRecord.getOrigOnFile()) {
-      Console.println("dataChanged: OrigOnFile");
+      cams.console.Console.println("dataChanged: OrigOnFile");
       return true;
     }
     if (jckModelRelease.isSelected() != mCurrentRecord.getModelRelease()) {
-      Console.println("dataChanged: ModelRelease");
+      cams.console.Console.println("dataChanged: ModelRelease");
       return true;
     }
     if (!jtxtPNumber.getText().equals(mCurrentRecord.getPNumber())) {
-      Console.println("dataChanged: PNumber");
+      cams.console.Console.println("dataChanged: PNumber");
       return true;
     }
 
@@ -1587,7 +1587,7 @@ public class ExclusiveDetailsDialog extends JDialog {
 //      }
 //    }
 //    catch (PrinterException ex) {
-//      Console.println("Print Error: " + ex.getMessage());
+//      cams.console.Console.println("Print Error: " + ex.getMessage());
 //    }
   }
 
@@ -1684,7 +1684,7 @@ public class ExclusiveDetailsDialog extends JDialog {
                              graphics.getFontMetrics().getHeight() * 5, this);
         }
         catch (Exception ex) {
-          Console.println("ExclusiveDetailsDialog:print Error: " + ex.getMessage());
+          cams.console.Console.println("ExclusiveDetailsDialog:print Error: " + ex.getMessage());
         }
       }
     } // drawGraphics
@@ -1780,7 +1780,7 @@ public class ExclusiveDetailsDialog extends JDialog {
       fw.write("</STYLE>" + lf + "</head><body>" + lf);
     }
     catch (Exception ex) {
-      Console.println("Error opening html file for printing: " + ex.getMessage());
+      cams.console.Console.println("Error opening html file for printing: " + ex.getMessage());
       return;
     }
 
@@ -1825,7 +1825,7 @@ public class ExclusiveDetailsDialog extends JDialog {
       ((ImageLibFrame) mParent).viewHTMLFile(fileName);
     }
     catch (Exception ex) {
-      Console.println("Error writing to html file for printing: " +
+      cams.console.Console.println("Error writing to html file for printing: " +
                       ex.getMessage());
     }
 

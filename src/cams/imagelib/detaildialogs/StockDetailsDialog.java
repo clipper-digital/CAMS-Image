@@ -11,7 +11,7 @@ import java.awt.print.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import cams.console.*;
+// import cams.console.*;
 import cams.database.*;
 import cams.imagelib.*;
 import com.borland.jbcl.layout.*;
@@ -818,7 +818,7 @@ public class StockDetailsDialog extends JDialog {
       rs.close(); rs = null;
     }
     catch (Exception ex) {
-      Console.println("StockDetailsDialog:loadStatus: " + ex.getMessage());
+      cams.console.Console.println("StockDetailsDialog:loadStatus: " + ex.getMessage());
     }
     cboStatus.setSelectedIndex(0);
   }
@@ -841,7 +841,7 @@ public class StockDetailsDialog extends JDialog {
       rs.close(); rs = null;
     }
     catch (Exception ex) {
-      Console.println("StockDetailsDialog:loadReleases: " + ex.getMessage());
+      cams.console.Console.println("StockDetailsDialog:loadReleases: " + ex.getMessage());
     }
     cboReleases.setSelectedIndex(0);
   }
@@ -969,7 +969,7 @@ public class StockDetailsDialog extends JDialog {
       }
       sql += " WHERE record_id = ";
 
-      Console.println("Batch Edit: " + sql);
+      cams.console.Console.println("Batch Edit: " + sql);
       for (int i=0; i < mSelectedRows.length; i++) {
         mCurrentRecord = ((ImageLibFrame) mParent).getImageRecordByRow(mSelectedRows[i]);
         mCamsDB.execute(sql + mCurrentRecord.getRecordId());
@@ -1434,19 +1434,19 @@ public class StockDetailsDialog extends JDialog {
   void jbtnPrint_actionPerformed(ActionEvent e) {
     htmlPrintDetails();
 
-//    Console.println("StockDetails:Print Started");
+//    cams.console.Console.println("StockDetails:Print Started");
 //    PrinterJob pjob = PrinterJob.getPrinterJob();
 //    PageFormat pf = pjob.defaultPage();
 //    pjob.setPrintable(new PrintDetailClass(), pf);
 //
 //    try {
 //      if (pjob.printDialog()) {
-//        Console.println("StockDetails:Print Dialog Returned, calling .print()");
+//        cams.console.Console.println("StockDetails:Print Dialog Returned, calling .print()");
 //        pjob.print();
 //      }
 //    }
 //    catch (PrinterException ex) {
-//      Console.println("Print Error: " + ex.getMessage());
+//      cams.console.Console.println("Print Error: " + ex.getMessage());
 //    }
   }
 
@@ -1491,7 +1491,7 @@ public class StockDetailsDialog extends JDialog {
       if (pageIndex > 0) {
         return Printable.NO_SUCH_PAGE;
       }
-      Console.println("PrintDetailClass:print: pageIndex = " + pageIndex);
+      cams.console.Console.println("PrintDetailClass:print: pageIndex = " + pageIndex);
       Graphics2D g2d = (Graphics2D) g;
       g2d.translate(pf.getImageableX(), pf.getImageableY());
       drawGraphics(g2d, pf);
@@ -1499,7 +1499,7 @@ public class StockDetailsDialog extends JDialog {
     }
 
     private void drawGraphics(Graphics2D graphics, PageFormat pf) {
-      Console.println("StockDetailsDialog:drawGraphics: Start");
+      cams.console.Console.println("StockDetailsDialog:drawGraphics: Start");
       // Set starting Y position
       setBold(graphics);
       mCurrentY = graphics.getFontMetrics().getHeight() + 1;
@@ -1539,11 +1539,11 @@ public class StockDetailsDialog extends JDialog {
                              graphics.getFontMetrics().getHeight() * 5, this);
         }
         catch (Exception ex) {
-          Console.println("StockDetailsDialog:print Error: " + ex.getMessage());
+          cams.console.Console.println("StockDetailsDialog:print Error: " + ex.getMessage());
         }
       }
 
-      Console.println("StockDetailsDialog:drawGraphics: Finish");
+      cams.console.Console.println("StockDetailsDialog:drawGraphics: Finish");
     } // drawGraphics
 
     private void setBold(Graphics2D graphics) { graphics.setFont(new Font("Arial", Font.BOLD, mFontSize)); }
@@ -1608,7 +1608,7 @@ public class StockDetailsDialog extends JDialog {
       fw.write("</STYLE>" + lf + "</head><body>" + lf);
     }
     catch (Exception ex) {
-      Console.println("Error opening html file for printing: " + ex.getMessage());
+      cams.console.Console.println("Error opening html file for printing: " + ex.getMessage());
       return;
     }
 
@@ -1647,7 +1647,7 @@ public class StockDetailsDialog extends JDialog {
       ((ImageLibFrame) mParent).viewHTMLFile(fileName);
     }
     catch (Exception ex) {
-      Console.println("Error writing to html file for printing: " +
+      cams.console.Console.println("Error writing to html file for printing: " +
                       ex.getMessage());
     }
 

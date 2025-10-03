@@ -9,7 +9,7 @@ import cams.database.*;
 import com.borland.jbcl.layout.*;
 import javax.swing.border.*;
 import java.awt.event.*;
-import cams.console.*;
+// import cams.console.*;
 
 /**
  * <p>Title: Clipper Asset Management System</p>
@@ -133,7 +133,7 @@ public class RecordDetailsDialog extends JDialog {
       cboAdSize.setSelectedIndex(0);
     }
     catch (Exception ex) {
-      Console.println("RecordDetailsDialog:loadAdSizes: " + ex.getMessage());
+      cams.console.Console.println("RecordDetailsDialog:loadAdSizes: " + ex.getMessage());
     }
   }
 
@@ -155,7 +155,7 @@ public class RecordDetailsDialog extends JDialog {
       cboAdQuality.setSelectedIndex(0);
     }
     catch (Exception ex) {
-      Console.println("RecordDetailsDialog:loadAdQualities: " + ex.getMessage());
+      cams.console.Console.println("RecordDetailsDialog:loadAdQualities: " + ex.getMessage());
     }
   }
 
@@ -229,7 +229,7 @@ public class RecordDetailsDialog extends JDialog {
   }
 
   private void saveRecord() {
-    Console.println("Save Record");
+    cams.console.Console.println("Save Record");
 
     int selectedRow = mJTableDetails.getSelectedRow();
     ImageLibRecord theRecord = (ImageLibRecord) mTheRecords.get(mTableSorter.modelIndex(selectedRow));

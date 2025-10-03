@@ -12,7 +12,7 @@ import java.awt.print.*;
 
 import cams.imagelib.*;
 import cams.database.*;
-import cams.console.*;
+// import cams.console.*;
 
 
 public class ImageDetailsDialog extends JDialog {
@@ -573,7 +573,7 @@ public class ImageDetailsDialog extends JDialog {
       }
     }
     catch (PrinterException ex) {
-      Console.println("Print Error: " + ex.getMessage());
+      cams.console.Console.println("Print Error: " + ex.getMessage());
     }
   }
 

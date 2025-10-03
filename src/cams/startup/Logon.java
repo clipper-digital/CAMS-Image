@@ -9,7 +9,7 @@ import java.sql.*;
 
 import cams.database.*;
 import cams.database.CamsDB.*;
-import cams.console.*;
+// import cams.console.*;
 
 /**
  * <p>Title: Clipper Asset Management System</p>
@@ -139,7 +139,7 @@ public class Logon extends JDialog {
       }
     }
     catch (Exception ex) {
-      Console.println("Logon:doLogon: " + ex.getMessage());
+      cams.console.Console.println("Logon:doLogon: " + ex.getMessage());
     }
   }
 

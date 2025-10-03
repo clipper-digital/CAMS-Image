@@ -5,7 +5,7 @@ import java.util.*;
 import java.io.*;
 import java.sql.*;
 
-import cams.console.*;
+// import cams.console.*;
 import cams.imaging.ImageMagick;
 
 /**

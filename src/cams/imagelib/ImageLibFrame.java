@@ -13,7 +13,7 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.tree.*;
 
-import cams.console.*;
+// import cams.console.*;
 import cams.database.*;
 import cams.imagelib.detaildialogs.*;
 import cams.imagelib.importrecord.*;
@@ -773,7 +773,7 @@ public class ImageLibFrame extends JFrame {
     DecimalFormat df = (DecimalFormat)NumberFormat.getNumberInstance();
     df.applyPattern("0.000");
 
-    Console.println("refreshCatalogTree - Start");
+    cams.console.Console.println("refreshCatalogTree - Start");
     java.util.Date startTime = new java.util.Date();
 
     // Clear Tree
@@ -805,7 +805,7 @@ public class ImageLibFrame extends JFrame {
             "ImageLibSearch.record_id WHERE search_user = '" +
             mCamsDB.getUserInfo().getSearchID() + "' ORDER BY ImageLibCatalog.sort_order";
 
-//    Console.println("RefreshCatalogTree (1): " + df.format((new java.util.Date().getTime() - startTime.getTime()) / 1000.0));
+//    cams.console.Console.println("RefreshCatalogTree (1): " + df.format((new java.util.Date().getTime() - startTime.getTime()) / 1000.0));
       rs = mCamsDB.query(sql);
       while (rs.next()) {
         CamsTreeNode theCamsNode = new CamsTreeNode();
@@ -831,7 +831,7 @@ public class ImageLibFrame extends JFrame {
               "WHERE ImageLibSearch.search_user = '" + mCamsDB.getUserInfo().getSearchID() +
               "' ORDER BY ImageLibCategory.category_parent, ImageLibCategory.category_name";
 
-//    Console.println("RefreshCatalogTree (2): " + df.format((new java.util.Date().getTime() - startTime.getTime()) / 1000.0));
+//    cams.console.Console.println("RefreshCatalogTree (2): " + df.format((new java.util.Date().getTime() - startTime.getTime()) / 1000.0));
       rs = mCamsDB.query(sql);
 
       DefaultMutableTreeNode theCatalogNode = null;
@@ -878,7 +878,7 @@ public class ImageLibFrame extends JFrame {
       }
       catch (Exception ex) {}
 
-//    Console.println("RefreshCatalogTree (3): " + df.format((new java.util.Date().getTime() - startTime.getTime()) / 1000.0));
+//    cams.console.Console.println("RefreshCatalogTree (3): " + df.format((new java.util.Date().getTime() - startTime.getTime()) / 1000.0));
 
       // Add Import Batches
       if ((!mShowSearchResults) && (jmnuShowBatches.getText().startsWith("Hide"))) {
@@ -918,7 +918,7 @@ public class ImageLibFrame extends JFrame {
       }
     }
     catch (Exception ex) {
-      Console.println("refreshCatalogTree: " + ex.getMessage());
+      cams.console.Console.println("refreshCatalogTree: " + ex.getMessage());
     }
     finally {
       if (rs != null) {
@@ -929,7 +929,7 @@ public class ImageLibFrame extends JFrame {
       }
     }
 
-//  Console.println("RefreshCatalogTree (4): " + df.format((new java.util.Date().getTime() - startTime.getTime()) / 1000.0));
+//  cams.console.Console.println("RefreshCatalogTree (4): " + df.format((new java.util.Date().getTime() - startTime.getTime()) / 1000.0));
 
     jTreeFolders.setRootVisible(false);
     DefaultTreeModel treeModel = (DefaultTreeModel) jTreeFolders.getModel();
@@ -942,7 +942,7 @@ public class ImageLibFrame extends JFrame {
     doRefreshMemory();
 
     String theTime = df.format((endTime.getTime() - startTime.getTime()) / 1000.0);
-    Console.println("refreshCatalogTree - Finish.  " + theTime + " sec");
+    cams.console.Console.println("refreshCatalogTree - Finish.  " + theTime + " sec");
 }
 
   /**
@@ -1009,7 +1009,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
   public void processTreeSelection(TreeSelectionEvent e) {
 
     if (!jTreeFolders.isEnabled()) {
-//    Console.println("(ProcessTreeSelection) Folders are disabled");
+//    cams.console.Console.println("(ProcessTreeSelection) Folders are disabled");
       return;
     }
 
@@ -1047,7 +1047,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
   }
 
   public void refreshDetailTable(DefaultMutableTreeNode treeNode, boolean afterEdit) {
-    Console.println("refreshDetailTable - Start");
+    cams.console.Console.println("refreshDetailTable - Start");
 
     CamsTreeNode theNode = (CamsTreeNode) treeNode.getUserObject();
     TableSorter sorter = (TableSorter) jtableDetails.getModel();
@@ -1079,7 +1079,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
     setCursor(new Cursor(Cursor.WAIT_CURSOR));
     doEnableDisableFrame(false);
 
-    Console.println("refreshDetailTable - Building SQL Query");
+    cams.console.Console.println("refreshDetailTable - Building SQL Query");
     if ( (theNode.id == -1)  && (theNode.catalog_id > 0) ) {
     // Show ALL matching records in this Catalog
     sql =
@@ -1186,24 +1186,24 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
           mTableModel.setTotalRecords(mCamsDB.getQueryRows(mSql));
         else
           mTableModel.setTotalRecords(mNumAssets);
-        Console.println("RefreshRecords: Start (" + mTableModel.getTotalRecords() + " total records)");
+        cams.console.Console.println("RefreshRecords: Start (" + mTableModel.getTotalRecords() + " total records)");
 
         if (mSql.toUpperCase().startsWith("SELECT "))
           mSql = "SELECT TOP " + getMaxRows() + mSql.substring(6);
         else
-          Console.println("RefreshTableDetails Query DID NOT start with 'SELECT '");
+          cams.console.Console.println("RefreshTableDetails Query DID NOT start with 'SELECT '");
 
-        Console.println("RefreshRecords: Running Query '" + mSql + "'");
+        cams.console.Console.println("RefreshRecords: Running Query '" + mSql + "'");
         rs = mCamsDB.query(mSql);
-        Console.println("RefreshRecords: Query Finished, Fetching each row...");
+        cams.console.Console.println("RefreshRecords: Query Finished, Fetching each row...");
         while (rs.next()) {
           ImageLibRecord theRecord = new ImageLibRecord(rs);
           mData.add(theRecord);
         }
       }
       catch (Exception ex) {
-        Console.println("RefreshTableDetails: " + ex.getMessage());
-        Console.println("SQL = " + mSql);
+        cams.console.Console.println("RefreshTableDetails: " + ex.getMessage());
+        cams.console.Console.println("SQL = " + mSql);
       }
       finally {
         if (rs != null) {
@@ -1215,7 +1215,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       }
 
 //    jtableDetails.updateUI();
-//    Console.println("RefreshRecords: Data Loaded, updating display (fireTableDataChanged)");
+//    cams.console.Console.println("RefreshRecords: Data Loaded, updating display (fireTableDataChanged)");
       theTableSorter.fireTableDataChanged();
 
       if (mData.size() == 0)
@@ -1234,7 +1234,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
 
       setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
       doEnableDisableFrame(true);
-      Console.println("RefreshRecords: End");
+      cams.console.Console.println("RefreshRecords: End");
     }
   }
 
@@ -1444,7 +1444,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
     if ( (!mCamsDB.windowsOS()) && (SwingUtilities.isRightMouseButton(e))
         && (e.getModifiersEx() == 4352)) {
       // Mac CMD-Click
-      Console.println("Mac CMD-Click on row=" + rowSelected);
+      cams.console.Console.println("Mac CMD-Click on row=" + rowSelected);
       if (jtableDetails.isRowSelected(rowSelected))
         jtableDetails.removeRowSelectionInterval(rowSelected, rowSelected);
       else
@@ -1469,7 +1469,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
     thePanel.setBackground(SystemColor.controlShadow);
     thePanel.getComponentAt(5, 5).setBackground(SystemColor.controlShadow);
 
-//      Console.println("isRightMouseButton = " + SwingUtilities.isRightMouseButton(e) +
+//      cams.console.Console.println("isRightMouseButton = " + SwingUtilities.isRightMouseButton(e) +
 //                      ", getModifiers = " + e.getModifiersEx() +
 //                      ", META_DOWN = " + e.META_DOWN_MASK +
 //                      ", CTRL_DOWN = " + e.CTRL_DOWN_MASK +
@@ -1581,7 +1581,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       }
     }
     catch (Exception ex) {
-      Console.println("viewAsset: " + ex.getMessage());
+      cams.console.Console.println("viewAsset: " + ex.getMessage());
     }
   }
 
@@ -1691,7 +1691,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
     if (mCamsDB.windowsOS())
       isRightClick = SwingUtilities.isRightMouseButton(e);
     else { // Mac
-//      Console.println("isRightMouseButton = " + SwingUtilities.isRightMouseButton(e) +
+//      cams.console.Console.println("isRightMouseButton = " + SwingUtilities.isRightMouseButton(e) +
 //                      ", getModifiers = " + e.getModifiersEx() +
 //                      ", META_DOWN = " + e.META_DOWN_MASK +
 //                      ", CTRL_DOWN = " + e.CTRL_DOWN_MASK);
@@ -1993,12 +1993,12 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
    * @return ArrayList
    */
   private ArrayList getNumAssetsInFolder(DefaultMutableTreeNode treeNode) {
-    Console.println("getNumAssetsInFolder - Start");
+    cams.console.Console.println("getNumAssetsInFolder - Start");
 
     CamsTreeNode theNode = (CamsTreeNode) treeNode.getUserObject();
     ArrayList result = new ArrayList();
 
-//    Console.println("getNumAssetsInFolder - Locating subcategories");
+//    cams.console.Console.println("getNumAssetsInFolder - Locating subcategories");
     // Create list of all sub-categories to this folder
     String fullPath = theNode.fullPath;
 
@@ -2008,9 +2008,9 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
 //    String sql = "DELETE FROM ImageLibSearch WHERE search_user = " + searchUser;
 //    mCamsDB.execute(sql);
 
-    Console.println("Generating list of SubCategories - START");
+    cams.console.Console.println("Generating list of SubCategories - START");
     insertSubCategories(theNode.id);
-    Console.println("Generating list of SubCategories - END");
+    cams.console.Console.println("Generating list of SubCategories - END");
 
 //    sql = "INSERT INTO ImageLibSearch (search_user, search_date, record_id) " +
 //        "VALUES (" + searchUser + ", getDate(), ";
@@ -2034,7 +2034,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
           "search_user = " + searchUser + ") " +
           "GROUP BY search_user HAVING search_user = '" + mCamsDB.getUserInfo().getSearchID() + "'";
 
-//    Console.println("getNumAssetsInFolder - Counting matching records.");
+//    cams.console.Console.println("getNumAssetsInFolder - Counting matching records.");
     String numAssetsStr = mCamsDB.querySingleString(sql);
     long numAssets = 0;
 
@@ -2044,7 +2044,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
     result.add(new Long(numAssets));
     result.add(searchUser);
 
-    Console.println("getNumAssetsInFolder - Finished (" + numAssets + " in selected categories)");
+    cams.console.Console.println("getNumAssetsInFolder - Finished (" + numAssets + " in selected categories)");
     return result;
   }
 
@@ -2060,7 +2060,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       stmt = null;
     }
     catch (Exception ex) {
-      Console.println("insertSubCategories: " + ex.getMessage());
+      cams.console.Console.println("insertSubCategories: " + ex.getMessage());
     }
   }
 
@@ -2225,7 +2225,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
     if (dataSaved) mAnyDetailDialogsSaved = dataSaved;
 
     if (mNumDetailDialogsOpen < 1) {
-      Console.println("Last non-modal detail window closed.");
+      cams.console.Console.println("Last non-modal detail window closed.");
       if (mAnyDetailDialogsSaved) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                                jTreeFolders.getLastSelectedPathComponent();
@@ -2528,7 +2528,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
   void removeEmptyFolders(DefaultMutableTreeNode startLevel) {
     if (startLevel.getChildCount() == 0) return;
 
-    Console.println("removeEmptyFolders - Start");
+    cams.console.Console.println("removeEmptyFolders - Start");
     DefaultMutableTreeNode theTreeNode = (DefaultMutableTreeNode) startLevel.getFirstChild();
     while (theTreeNode != null) {
       // Get Top Level Folders under 'startLevel'
@@ -2550,20 +2550,20 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
         long numAssets = ((Long) numAssetsResult.get(0)).longValue();
         if (numAssets > 0) {
           // Found records, try the folder(s) below
-          Console.println("Found " + numAssets + " assets in and below folder " + theCamsNode.fullPath);
+          cams.console.Console.println("Found " + numAssets + " assets in and below folder " + theCamsNode.fullPath);
           removeEmptyFolders(theTreeNode);
           theTreeNode = theTreeNode.getNextSibling();
         }
         else {
           // This folder (and those below) are empty
-          Console.println("Found no assets in and below folder " + theCamsNode.fullPath);
+          cams.console.Console.println("Found no assets in and below folder " + theCamsNode.fullPath);
           DefaultMutableTreeNode nodeToDelete = theTreeNode;
           theTreeNode = theTreeNode.getNextSibling();
           nodeToDelete.removeFromParent();
         }
       }
     }
-    Console.println("removeEmptyFolders - Finish");
+    cams.console.Console.println("removeEmptyFolders - Finish");
   }
 
   void jbtnPrevious_actionPerformed(ActionEvent e) {
@@ -2749,7 +2749,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
     // Are these records being pasted to the same or different catalog?
     ImageLibClipboard firstAsset = (ImageLibClipboard) mAssetsToCopy.get(0);
     if (firstAsset.theRecord.getCatalogId() == thisNode.catalog_id) {
-      Console.println("Pasting " + mAssetsToCopy.size() + " records within SAME " +
+      cams.console.Console.println("Pasting " + mAssetsToCopy.size() + " records within SAME " +
                       "Catalog but Different Category");
       // Same Catalog, Just Add to this Category
       for (int i=0; i < mAssetsToCopy.size(); i++) {
@@ -2774,7 +2774,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       }
     }
     else {
-      Console.println("Pasting " + mAssetsToCopy.size() + " records within DIFFERENT " +
+      cams.console.Console.println("Pasting " + mAssetsToCopy.size() + " records within DIFFERENT " +
                       "Catalog");
 
       // New Catalog, Copy Record to new Catalog
@@ -2853,7 +2853,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
 //  if (mShowSearchResults) mCutAssets = false;
 
     if (mCutAssets) {
-      Console.println("Now removing (cut) " + mAssetsToCopy.size() + " records " +
+      cams.console.Console.println("Now removing (cut) " + mAssetsToCopy.size() + " records " +
                       "from original category");
       // Delete the Clipboard Assets from their Original Categories
       for (int i = 0; i < mAssetsToCopy.size(); i++) {
@@ -3140,7 +3140,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
           }
         }
         catch (Exception ex) {
-          Console.println("Error rotating Thumbnails: " + ex.getMessage());
+          cams.console.Console.println("Error rotating Thumbnails: " + ex.getMessage());
         }
       }
 
@@ -3649,7 +3649,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       fw.write("</STYLE>" + lf + "</head><body>" + lf);
     }
     catch (Exception ex) {
-      Console.println("Error opening html file for printing: " + ex.getMessage());
+      cams.console.Console.println("Error opening html file for printing: " + ex.getMessage());
       return;
     }
 
@@ -3695,7 +3695,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       viewHTMLFile(fileName);
     }
     catch (Exception ex) {
-      Console.println("Error writing to html file for printing: " + ex.getMessage());
+      cams.console.Console.println("Error writing to html file for printing: " + ex.getMessage());
     }
 
   }
@@ -3727,7 +3727,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       fw.write("</STYLE>" + lf + "</head><body>" + lf);
     }
     catch (Exception ex) {
-      Console.println("Error opening html file for printing: " + ex.getMessage());
+      cams.console.Console.println("Error opening html file for printing: " + ex.getMessage());
       return;
     }
 
@@ -3775,7 +3775,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       viewHTMLFile(fileName);
     }
     catch (Exception ex) {
-      Console.println("Error writing to html file for printing: " + ex.getMessage());
+      cams.console.Console.println("Error writing to html file for printing: " + ex.getMessage());
     }
 
   }
@@ -3805,7 +3805,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       fw.write("</STYLE>" + lf + "</head><body>" + lf);
     }
     catch (Exception ex) {
-      Console.println("Error opening html file for printing: " + ex.getMessage());
+      cams.console.Console.println("Error opening html file for printing: " + ex.getMessage());
       return;
     }
 
@@ -3854,7 +3854,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       viewHTMLFile(fileName);
     }
     catch (Exception ex) {
-      Console.println("Error writing to html file for printing: " + ex.getMessage());
+      cams.console.Console.println("Error writing to html file for printing: " + ex.getMessage());
     }
 
   }
@@ -3866,7 +3866,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       stream.close();
     }
     catch (Exception ex) {
-      Console.println("writeJPGFile: " + ex.getMessage());
+      cams.console.Console.println("writeJPGFile: " + ex.getMessage());
     }
 
   }
@@ -3886,7 +3886,7 @@ public DefaultMutableTreeNode findTreeCatalogNode(int catalog_id) {
       }
     }
     catch (Exception ex) {
-      Console.println("Error in launchHTMLFile: " + ex.getMessage());
+      cams.console.Console.println("Error in launchHTMLFile: " + ex.getMessage());
     }
   }
 
